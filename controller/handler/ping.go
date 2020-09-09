@@ -1,4 +1,4 @@
-package ping
+package hping
 
 import "github.com/gofiber/fiber"
 
