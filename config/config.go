@@ -7,7 +7,7 @@ import (
 
 	"github.com/jeffotoni/gcolor"
 	"github.com/jeffotoni/gokafka.poc/pkg/fmts"
-	"github.com/jeffotoni/gokafka.poc/service/kafka/check"
+	"github.com/jeffotoni/gokafka.poc/service/check"
 	"gopkg.in/yaml.v2"
 )
 
