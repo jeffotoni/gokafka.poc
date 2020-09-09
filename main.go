@@ -55,7 +55,7 @@ var (
 
 func main() {
 
-	kafkaWriter := getKafkaWriter("", "test")
+	kafkaWriter := getKafkaWriter("localhost:9092", "test")
 
 	defer kafkaWriter.Close()
 
