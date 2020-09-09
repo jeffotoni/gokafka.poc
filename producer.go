@@ -8,8 +8,8 @@ import (
 
 	"github.com/gofiber/fiber"
 	"github.com/gofiber/limiter"
-	handler "github.com/jeffotoni/gokafkapoc/controller/handler/ping"
-	mw "github.com/jeffotoni/gokafkapoc/controller/middleware"
+	handlerPing "github.com/jeffotoni/gokafka.poc/controller/handler/ping"
+	mw "github.com/jeffotoni/gokafka.poc/controller/middleware"
 
 	kafka "github.com/segmentio/kafka-go"
 )
@@ -81,8 +81,8 @@ func main() {
 
 	mw.Compress(app)
 
-	app.Get("/ping", handler.Ping)
-	app.Post("/producer", handler.Ping)
+	app.Get("/ping", handlerPing.Ping)
+	app.Post("/producer", handlerPing.Ping)
 
 	app.Listen(8181)
 
