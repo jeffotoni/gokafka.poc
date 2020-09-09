@@ -8,7 +8,7 @@ import (
 
 	"github.com/gofiber/fiber"
 	"github.com/gofiber/limiter"
-	hping "github.com/jeffotoni/gokafka.poc/controller/handler/hping"
+	hping "github.com/jeffotoni/gokafka.poc/controller/handler/ping"
 	mw "github.com/jeffotoni/gokafka.poc/controller/middleware"
 	kafka "github.com/segmentio/kafka-go"
 )
