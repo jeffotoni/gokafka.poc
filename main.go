@@ -2,9 +2,7 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
-	"net/http"
 
 	"github.com/gofiber/fiber"
 	"github.com/gofiber/limiter"
@@ -13,36 +11,35 @@ import (
 	kafka "github.com/segmentio/kafka-go"
 )
 
-func producerHandler(kafkaWriter *kafka.Writer) func(http.ResponseWriter, *http.Request) {
-	return http.HandlerFunc(func(wrt http.ResponseWriter, req *http.Request) {
-		if req.Method == http.MethodPost {
-			body, err := ioutil.ReadAll(req.Body)
-			if err != nil {
-				log.Println("Body:", err)
-				return
-			}
-			msg := kafka.Message{
-				Key:   []byte(fmt.Sprintf("address-%s", req.RemoteAddr)),
-				Value: body,
-			}
-			err = kafkaWriter.WriteMessages(req.Context(), msg)
-			if err != nil {
-				wrt.WriteHeader(200)
-				wrt.Write([]byte(err.Error()))
-				log.Println("kafka:", err)
-			}
-		} else {
-			wrt.WriteHeader(400)
-			wrt.Write([]byte(`{"msg":"Method not allowed"}`))
+func mwProducer(kafkaWriter *kafka.Writer) fiber.Handler {
+	return func(c *fiber.Ctx) {
+		if len(c.Body()) <= 0 {
+			log.Println("Error kafka sem body, msg obritagoria")
+			c.Next(fiber.ErrBadRequest)
+			return
 		}
-	})
+		msg := kafka.Message{
+			Key:   []byte(fmt.Sprintf("address-%s", c.IP())),
+			Value: []byte(c.Body()),
+		}
+
+		err := kafkaWriter.WriteMessages(c.Context(), msg)
+		if err != nil {
+			log.Println("kafka:", err)
+			c.Next(fiber.ErrBadRequest)
+			return
+		}
+		c.Next()
+	}
 }
 
-func getKafkaWriter(kafkaURL, topic string) *kafka.Writer {
+func getKafkaWriter(kafkaURL []string, topic string) *kafka.Writer {
 	return kafka.NewWriter(kafka.WriterConfig{
-		Brokers:  []string{kafkaURL},
-		Topic:    topic,
-		Balancer: &kafka.LeastBytes{},
+		Brokers:      kafkaURL,
+		Topic:        topic,
+		Balancer:     &kafka.LeastBytes{},
+		RequiredAcks: -1, // acks = 0, acks = 1, acks = -1
+		//CommitInterval: time.Second * 5, // flushes commits to Kafka every second
 	})
 }
 
@@ -54,7 +51,23 @@ var (
 
 func main() {
 
-	kafkaWriter := getKafkaWriter("localhost:9092", "test")
+	// config := []kafka.ConfigEntry{
+	// 	{ConfigName: "cleanup.policy", ConfigValue: "compact"},
+	// 	{ConfigName: "segment.bytes", ConfigValue: "10240"},
+	// }
+
+	// topic := kafka.TopicConfig{
+	// 	Topic:         kafkaCheckpointTopic,
+	// 	NumPartitions: 1,
+	// 	ConfigEntries: config,
+	// }
+
+	// error := conn.CreateTopics(topic)
+	// if error != nil {
+	// 	glog.Error(error)
+	// }
+
+	kafkaWriter := getKafkaWriter([]string{"localhost:9092", "localhost:9092"}, "test")
 
 	defer kafkaWriter.Close()
 
@@ -67,7 +80,7 @@ func main() {
 	//Rate Limite
 	app.Use(limiter.New(limiter.Config{
 		Timeout:    1,
-		Max:        1000,
+		Max:        10000,
 		Filter:     nil,
 		StatusCode: 401,
 		Message:    `{"msg":"Much Request #bloqued"}`,
@@ -75,13 +88,11 @@ func main() {
 	//==========================================
 
 	mw.Cors(app)
-
 	mw.Logger(app)
-
 	mw.Compress(app)
 
 	app.Get("/ping", hping.Ping)
-	app.Post("/producer", hping.Ping)
+	app.Post("/producer", mwProducer(kafkaWriter))
 
 	app.Listen(8181)
 
