@@ -65,6 +65,9 @@ license that can be found in the LICENSE file.
               run();
               HideStartGameCard();
               SetName(person);
+              setTimeout(function () {
+                document.querySelector("canvas").focus();
+              }, 100);
             }
           }
         });
