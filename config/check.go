@@ -3,17 +3,33 @@ package config
 import (
 	"io/ioutil"
 	"os"
-	"time"
 
 	"github.com/jeffotoni/gcolor"
 	"github.com/jeffotoni/gokafka.poc/pkg/fmts"
 	"github.com/jeffotoni/gokafka.poc/service/check"
+	skafka "github.com/jeffotoni/gokafka.poc/service/kafka"
 	"gopkg.in/yaml.v2"
 )
 
+func CreateTopicGame() {
+	conf := Config()
+	fmts.Println(gcolor.YellowCor("........................................."))
+	fmts.Print(gcolor.GreenCor("Check seu topic game...          "))
+	err := skafka.CreateTopicKafka{
+		Host:              conf.Kafka.Host,
+		PolicyCleanup:     conf.Kafka.PolicyCleanup,
+		Name:              conf.Kafka.TopicGame,
+		NumPartitions:     conf.Kafka.NumPartitions,
+		ReplicationFactor: conf.Kafka.ReplicationFactor}.TopicCreate()
+	if err != nil {
+		fmts.Println(gcolor.RedCor(" [error] => "), err.Error())
+		return
+	}
+	fmts.Println(gcolor.YellowCor(" [ok]"))
+}
+
 func Check() {
-	fmts.Println(gcolor.YellowCor("....check in 1s"))
-	time.Sleep(time.Second)
+	CreateTopicGame()
 	CheckStatuskafka()
 	fmts.Println(gcolor.YellowCor("........................................."))
 }

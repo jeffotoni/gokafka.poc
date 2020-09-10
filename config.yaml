@@ -1,7 +1,12 @@
 kafka:
+  host: "localhost:9092"
   host_consumer: ["localhost:9092","localhost:9092","localhost:9092"]
   host_producer: ["localhost:9092","localhost:9092","localhost:9092"]
   retentive: "topicgo1"
+  topic_game: "gogameblocks"
+  num_partitions: 3
+  replication_factor: 1
+  policy_cleanup: "compact"
 sys:
   timezone: "America/Sao_Paulo"
   debug: true
