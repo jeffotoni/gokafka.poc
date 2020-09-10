@@ -13,6 +13,8 @@ import (
     "strings"
     "time"
 
+    "github.com/jeffotoni/gcolor"
+    "github.com/jeffotoni/gconcat"
     kafka "github.com/segmentio/kafka-go"
 )
 
@@ -38,9 +40,10 @@ func main() {
     topic := *flagTopic
     groupID := *flagGroup
 
-    println("Url: ", kafkaURL)
-    println("Topic: ", topic)
-    println("Group: ", groupID)
+    println(".......................................................")
+    println(gcolor.YellowCor(gconcat.Build("Url:   ", kafkaURL)))
+    println(gcolor.YellowCor(gconcat.Build("Topic: ", topic)))
+    println(gcolor.YellowCor(gconcat.Build("Group: ", groupID)))
 
     reader := getKafkaReader(kafkaURL, topic, groupID)
     defer reader.Close()
@@ -61,12 +64,12 @@ func main() {
 
     go func(ctx context.Context) {
         for {
-            println("consumer: ", time.Now().Format("2006-01-02 15:04:05"))
             m, err := reader.ReadMessage(context.Background())
             if err != nil {
                 log.Fatalln(err)
             }
-            fmt.Printf("message at topic:%v partition:%v offset:%v  %s = %s\n", m.Topic, m.Partition, m.Offset, string(m.Key), string(m.Value))
+            fmt.Printf("message at date:%s topic:%v partition:%v offset:%v  %s = %s\n", time.Now().Format("2006-01-02 15:04:05"),
+                m.Topic, m.Partition, m.Offset, string(m.Key), string(m.Value))
             <-time.After(50 * time.Millisecond)
         }
     }(ctx)
