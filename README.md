@@ -14,16 +14,15 @@ $ curl -i -XPOST localhost:8181/ping
 
 $ curl -i -XPOST -H "Content-type:application/json" \
 localhost:8181/topic \
--d '{"name":"mytopic-test", "partition":3, "replication_factor":1}'
+-d '{"name":"mytopic8", "partition":3, "replication_factor":1}'
 
 ```
 
-### Producer
+### List all topic
 ```bash
 
-$ curl -i -XPOST -H "X-Key-User:12121212121" \
--H "Content-type:application/json" localhost:8181/producer \
--d '{"key":"x100001", "name":"jefferson otoni","score":3000}'
+$ curl -i -XGET -H "Content-type:application/json" \
+localhost:8181/topic
 
 ```
 
@@ -35,10 +34,11 @@ localhost:8181/topic/mytopic8
 
 ```
 
-### List all topic
+### Producer
 ```bash
 
-$ curl -i -XGET -H "Content-type:application/json" \
-localhost:8181/topic
+$ curl -i -XPOST -H "X-Key-User:12121212121" \
+-H "Content-type:application/json" localhost:8181/producer \
+-d '{"key":"x100001", "name":"jefferson otoni","score":3000}'
 
 ```
