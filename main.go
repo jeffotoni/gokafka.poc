@@ -18,10 +18,9 @@ import (
 )
 
 var (
-	conf          = config.Config() // faz a checagem
+	conf          = config.Config()
 	nameTopicGame = conf.Kafka.TopicGame
-	//kafkaWriter   *kafka.Writer
-	kafkaWriter = getKafkaWriter(conf.Kafka.HostProducer, nameTopicGame)
+	kafkaWriter   = getKafkaWriter(conf.Kafka.HostProducer, nameTopicGame) // kafkaWriter   *kafka.Writer
 )
 
 func init() {
