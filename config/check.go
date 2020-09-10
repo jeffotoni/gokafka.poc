@@ -6,8 +6,8 @@ import (
 
 	"github.com/jeffotoni/gcolor"
 	"github.com/jeffotoni/gokafka.poc/pkg/fmts"
+	skafka "github.com/jeffotoni/gokafka.poc/pkg/kafka"
 	"github.com/jeffotoni/gokafka.poc/service/check"
-	skafka "github.com/jeffotoni/gokafka.poc/service/kafka"
 	"gopkg.in/yaml.v2"
 )
 

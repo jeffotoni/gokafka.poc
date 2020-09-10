@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/gofiber/fiber"
-	skafka "github.com/jeffotoni/gokafka.poc/service/kafka"
+	skafka "github.com/jeffotoni/gokafka.poc/pkg/kafka"
 )
 
 // kafka-go
