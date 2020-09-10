@@ -1,0 +1,6 @@
+.terraform
+.backup
+.tfstate
+.comandos-kubectl-kafka.txt
+.idea
+credentials
