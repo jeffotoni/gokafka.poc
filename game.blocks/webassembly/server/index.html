@@ -10,6 +10,7 @@ license that can be found in the LICENSE file.
     <title>Go wasm GAME Blocks POC</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <script src="wasm_exec.js"></script>
     <script>
       if (!WebAssembly.instantiateStreaming) {
@@ -48,16 +49,63 @@ license that can be found in the LICENSE file.
       }
 
       window.PromptName = function() {
-        run();
-        var person = prompt("Please enter your name", "");
+        bootbox.prompt({
+          title: "Por favor, digite o seu nome:", 
+          centerVertical: true,
+          callback: function(person){ 
+            if (person === null || person == "") {
+              bootbox.alert({
+                message: "O nome &eacute; obrigat&oacute;rio!",
+                centerVertical: true,
+                callback: function () {
+                  document.location.reload(true);
+                }
+              });
+            } else {
+              run();
+              HideStartGameCard();
+              SetName(person);
+            }
+          }
+        });
+        /*var person = prompt("Please enter your name", "");
         if (person == null || person == "") {
           alert("Nome é obritagorio!");
           document.location.reload(true);
         } else {
           SetName(person);
-        }
+        }*/
+      }
+
+      window.HideStartGameCard = function() {
+        document.getElementById("CardStartGame").style.display = "none";
       }
     </script>
+
+    <style>
+      body {
+        font-size: 1.5rem;
+        font-family: 'Press Start 2P', cursive;
+        background: rgb(9,9,121);
+        background: -moz-linear-gradient(90deg, rgba(9,9,121,1) 0%, rgba(63,94,251,1) 35%, rgba(63,94,251,1) 65%, rgba(9,9,121,1) 100%);
+        background: -webkit-linear-gradient(90deg, rgba(9,9,121,1) 0%, rgba(63,94,251,1) 35%, rgba(63,94,251,1) 65%, rgba(9,9,121,1) 100%);
+        background: linear-gradient(90deg, rgba(9,9,121,1) 0%, rgba(63,94,251,1) 35%, rgba(63,94,251,1) 65%, rgba(9,9,121,1) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#090979",endColorstr="#090979",GradientType=1);
+      }
+
+      .card.card-start-game {
+        position: fixed;
+        top: 45%;
+        margin-top: -38px;
+        left: 50%;
+        margin-left: -325px;
+        background: rgba(0, 0, 0, .25);
+        color: #ffd700;
+        z-index: 1;
+        width: 650px;
+        height: 76px;
+      }
+    </style>
    </head>
 
     <body>
@@ -67,12 +115,17 @@ license that can be found in the LICENSE file.
       </div> -->
 
       <div class="navbar">
-        <div class="card">
+        <div class="card card-start-game" id="CardStartGame">
           <div class="card-header">
             Blocks - GO WASM POC <button onClick="PromptName();" class="btn-lg" id="runButton" disabled>Run</button>
           </div>
         </div>
       </div>
+
+      <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.4.0/bootbox.min.js"></script>
 
   </body>
 </html>
