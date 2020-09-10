@@ -1,0 +1,10 @@
+kafka:
+  host_consumer: ["localhost:9092","localhost:9092","localhost:9092"]
+  host_producer: ["localhost:9092","localhost:9092","localhost:9092"]
+  retentive: "topicgo1"
+sys:
+  timezone: "America/Sao_Paulo"
+  debug: true
+  numcpu: 4
+http:
+  port: 8181
