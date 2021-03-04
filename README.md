@@ -6,7 +6,7 @@ We have the game compiled for webassembly, we have the Apis in Go exposing to be
 
 <h2 align="center">
   <br/>
-  <img src="https://github.com/jeffotoni/gokafka.poc/img/blob/master/game.png" alt="logo" width="670" />
+  <img src="https://github.com/jeffotoni/gokafka.poc/blob/beta/img/game.png" alt="logo" width="670" />
   <br />
   <br />
   <br />
